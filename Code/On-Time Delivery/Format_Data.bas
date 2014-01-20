@@ -3,7 +3,6 @@ Option Explicit
 
 Sub RemoveData()
     Sheets("Drop In").Select
-    Rows(1).Delete
     FilterSheet "WESCO DISTRIBUTION INC", 23
     FilterSheet "Late", 25
     FilterDate
@@ -25,28 +24,24 @@ Sub FilterDate()
 
     Set Rng = ActiveSheet.UsedRange
     aHeaders = Range(Cells(1, 1), Cells(1, ActiveSheet.UsedRange.Columns.Count))
-    iCounter = 1
 
-    Do While iCounter <= Rng.Rows.Count
+    For iCounter = 1 To Rng.Rows.Count
         If Format(Rng(iCounter, 18).Value, "yymm") = Format(Date, "yymm") Then
             i = i + 1
         End If
-        iCounter = iCounter + 1
-    Loop
+    Next
 
     ReDim aRng(1 To i, 1 To Rng.Columns.Count) As Variant
 
-    iCounter = 1
     i = 0
-    Do While iCounter <= Rng.Rows.Count
+    For iCounter = 2 To Rng.Rows.Count
         If Format(Rng(iCounter, 18).Value, "yymm") = Format(Date, "yymm") Then
             i = i + 1
             For y = 1 To Rng.Columns.Count
                 aRng(i, y) = Rng(iCounter, y)
             Next
         End If
-        iCounter = iCounter + 1
-    Loop
+    Next
 
     ActiveSheet.Cells.Delete
     Range(Cells(1, 1), Cells(UBound(aRng, 1), UBound(aRng, 2))) = aRng
