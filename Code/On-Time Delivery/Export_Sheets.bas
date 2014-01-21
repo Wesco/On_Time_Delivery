@@ -6,6 +6,7 @@ Sub ExportDropIn()
     Dim FilePath As String
     Dim ColHeaders As Variant
     Dim TotalCols As Integer
+    Dim TotalRows As Long
 
     Application.DisplayAlerts = False
 
@@ -27,6 +28,15 @@ Sub ExportDropIn()
     'Reinsert column headers
     Rows(1).Insert
     Range(Cells(1, 1), Cells(1, TotalCols)).Value = ColHeaders
+
+    'Sort the filtered data
+    SortFHData Sheets("Temp")
+
+    'Fix date formats
+    Sheets("Temp").Select
+    TotalRows = Rows(Rows.Count).End(xlUp).Row
+    Range("H2:K" & TotalRows).NumberFormat = "m/d/yyyy"
+    Range("P2:P" & TotalRows).NumberFormat = "m/d/yyyy"
 
     'Copy the sheet
     Sheets("Temp").Copy
@@ -56,6 +66,15 @@ Sub ExportDropIn()
         ActiveWorkbook.Close
     End If
 
+    'Sort data
+    SortFHData Sheets("Drop In")
+
+    'Fix date formats
+    Sheets("Drop In").Select
+    TotalRows = Rows(Rows.Count).End(xlUp).Row
+    Range("H2:K" & TotalRows).NumberFormat = "m/d/yyyy"
+    Range("P2:P" & TotalRows).NumberFormat = "m/d/yyyy"
+
     MsgBox "Please save your report."
     ActiveSheet.Copy
     ActiveSheet.UsedRange.Columns.AutoFit
@@ -68,4 +87,38 @@ Sub ExportDropIn()
     ThisWorkbook.Close
 
     Application.DisplayAlerts = True
+End Sub
+
+Sub SortFHData(ws As Worksheet)
+    Dim PrevSheet As Worksheet
+    Set PrevSheet = ActiveSheet
+    Dim TotalRows As Long
+
+    ws.Select
+    TotalRows = Rows(Rows.Count).End(xlUp).Row
+
+    ActiveSheet.sort.SortFields.Clear
+    With ActiveSheet.sort
+        'Add sort for PO Status CD
+        .SortFields.Add Key:=Range("G2:G" & TotalRows), _
+                        SortOn:=xlSortOnValues, _
+                        Order:=xlAscending, _
+                        DataOption:=xlSortNormal
+
+        'Add sort for Req Delv Dt Adj
+        .SortFields.Add Key:=Range("I2:I2" & TotalRows), _
+                        SortOn:=xlSortOnValues, _
+                        Order:=xlAscending, _
+                        DataOption:=xlSortNormal
+
+        'Apply the sort
+        .SetRange ActiveSheet.UsedRange
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+
+    PrevSheet.Select
 End Sub
