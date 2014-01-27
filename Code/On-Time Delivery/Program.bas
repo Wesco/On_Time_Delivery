@@ -1,5 +1,7 @@
 Attribute VB_Name = "Program"
 Option Explicit
+Public Const RepositoryName As String = "On_Time_Delivery"
+Public Const VersionNumber = "1.0.1"
 
 Public FHType As String
 

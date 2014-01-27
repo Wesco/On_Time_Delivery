@@ -380,13 +380,18 @@ Sub ExportCode()
     Dim codeFolder As String
     Dim FileName As String
     Dim File As String
+    Dim WkbkPath As String
+
 
     'References Microsoft Visual Basic for Applications Extensibility 5.3
     AddReference "{0002E157-0000-0000-C000-000000000046}", 5, 3
-    codeFolder = GetWorkbookPath & "Code\" & Left(ThisWorkbook.Name, Len(ThisWorkbook.Name) - 5) & "\"
+    WkbkPath = Left$(ThisWorkbook.fullName, InStr(1, ThisWorkbook.fullName, ThisWorkbook.Name, vbTextCompare) - 1)
+    codeFolder = WkbkPath & "Code\" & Left(ThisWorkbook.Name, Len(ThisWorkbook.Name) - 5) & "\"
 
     On Error Resume Next
-    RecMkDir codeFolder
+    If Dir(codeFolder) = "" Then
+        RecMkDir codeFolder
+    End If
     On Error GoTo 0
 
     'Remove all previously exported modules
@@ -408,6 +413,11 @@ Sub ExportCode()
             Case 3
                 FileName = codeFolder & comp.Name & ".frm"
                 comp.Export FileName
+            Case 100
+                If comp.Name = "ThisWorkbook" Then
+                    FileName = codeFolder & comp.Name & ".bas"
+                    comp.Export FileName
+                End If
         End Select
     Next
 End Sub
