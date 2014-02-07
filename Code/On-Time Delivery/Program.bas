@@ -19,13 +19,20 @@ End Sub
 
 Sub NU_Main()
     Dim w As Variant
+    Dim Found As Boolean
 
     For Each w In Workbooks
-        If InStr(w.Name, "Integrated Supply POLineReport") Then
-            w.Activate
+        If InStr(w.Name, "Integrated") > 0 And InStr(w.Name, "Supply") > 0 And InStr(w.Name, "POLineReport") > 0 Then
+            Found = True
         End If
     Next
-    FormatSheet
+
+    If Found = True Then
+        w.Activate
+        FormatSheet
+    Else
+        MsgBox "The nuclear report could not be found."
+    End If
 End Sub
 
 Sub Clean()
