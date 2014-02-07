@@ -23,12 +23,12 @@ Sub NU_Main()
 
     For Each w In Workbooks
         If InStr(w.Name, "Integrated") > 0 And InStr(w.Name, "Supply") > 0 And InStr(w.Name, "POLineReport") > 0 Then
+            w.Activate
             Found = True
         End If
     Next
 
     If Found = True Then
-        w.Activate
         FormatSheet
     Else
         MsgBox "The nuclear report could not be found."
