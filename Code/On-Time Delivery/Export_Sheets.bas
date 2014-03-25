@@ -17,7 +17,8 @@ Sub ExportDropIn()
     'Filter sites
     ActiveSheet.UsedRange.AutoFilter Field:=1, _
                                      Criteria1:=Array("NF-BECKJ", "NF-MFORT", "NF-ZIMMR", "RC-EDWCC", "RC-MDWSC", "RC-NOBLE", _
-                                                      "RF-CAYUG", "RF-EBEND", "RF-GALLA", "RF-GBSON", "RC-WABRP", "RF-WBASH"), _
+                                                      "RF-CAYUG", "RF-EBEND", "RF-GALLA", "RF-GBSON", "RC-WABRP", "RF-WBASH", _
+                                                      "NC-HROCK"), _
                                                       Operator:=xlFilterValues
 
     ActiveSheet.UsedRange.Copy Destination:=Sheets("Temp").Range("A1")
